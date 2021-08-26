@@ -10,6 +10,4 @@ public interface ISimpleCalculator {
     double takeNegationOfNumber(double firstNumber);
 
     double takeSqrt(double number);
-
-    double calculateExpression(String expression);
 }

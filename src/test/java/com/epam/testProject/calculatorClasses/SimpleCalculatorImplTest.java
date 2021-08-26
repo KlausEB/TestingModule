@@ -3,9 +3,17 @@ package com.epam.testProject.calculatorClasses;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import javax.naming.OperationNotSupportedException;
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.Scanner;
+
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SimpleCalculatorImplTest {
@@ -124,18 +132,6 @@ public class SimpleCalculatorImplTest {
     }
 
     @Test
-    public void calculateExpression_True_StringExpressionSixDivideTwoAndDivideThreeEqualsOne(){
-        //GIVEN
-        String expression = "6 / 2 / 3";
-
-        //WHEN
-        double resultOfExpression = calculator.calculateExpression(expression);
-
-        //THEN
-        assertEquals(1, resultOfExpression, 0.0);
-    }
-
-    @Test
     public void calculateExpression_True_StringExpressionSixMultiplyTwoEqualsTwelve(){
         //GIVEN
         String expression = "6 * 2";
@@ -160,18 +156,6 @@ public class SimpleCalculatorImplTest {
     }
 
     @Test
-    public void calculateExpression_True_StringExpressionOneMultiplySqrtOfFourEqualsTwo(){
-        //GIVEN
-        String expression = "1 * sqrt4";
-
-        //WHEN
-        double resultOfExpression = calculator.calculateExpression(expression);
-
-        //THEN
-        assertEquals(2, resultOfExpression, 0.0);
-    }
-
-    @Test
     public void calculateExpression_True_FinalStringExpressionEqualsCorrectValue(){
         //GIVEN
         String expression = "2 + 3 * 45.3 * 90 + 20 - 8 / 20 - sqrt4";
@@ -191,4 +175,34 @@ public class SimpleCalculatorImplTest {
         //WHEN
         double resultOfExpression = calculator.calculateExpression(expression);
     }
+
+    @Test
+    public void calculateSumAllTermsOnStack_True_CorrectSumForElementsOnStack(){
+        //GIVEN
+        Deque<Double> termStack = new ArrayDeque<>();
+        termStack.addFirst(1.0);
+        termStack.addFirst(2.5);
+        termStack.addFirst(0.3);
+
+        //WHEN
+        double sumStack = calculator.calculateSumAllTermsOnStack(termStack);
+
+        //THEN
+        assertEquals(3.8, sumStack, 0.0);
+    }
+
+    @Test
+    public void defineOperationAndPutItsResultOnStack_True_CorrectWorkingWithStack(){
+        //GIVEN
+        Deque<Double> termStack = new ArrayDeque<>();
+        termStack.addFirst(2.0);
+        Scanner scanner = new Scanner("* 3");
+
+        //WHEN
+        calculator.defineOperationAndPutItsResultOnStack(scanner, termStack);
+
+        //THEN
+        assertEquals(6, termStack.removeFirst(), 0.0);
+    }
+
 }

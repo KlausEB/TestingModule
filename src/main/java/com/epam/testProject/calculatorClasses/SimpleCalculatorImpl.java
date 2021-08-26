@@ -1,5 +1,6 @@
 package com.epam.testProject.calculatorClasses;
 
+import com.epam.testProject.ICanCalculateExpressions;
 import com.epam.testProject.ISimpleCalculator;
 
 import java.util.ArrayDeque;
@@ -7,7 +8,7 @@ import java.util.Deque;
 import java.util.Locale;
 import java.util.Scanner;
 
-public class SimpleCalculatorImpl implements ISimpleCalculator {
+public class SimpleCalculatorImpl implements ISimpleCalculator, ICanCalculateExpressions {
 
     @Override
     public double takeSum(double firstNumber, double secondNumber) {
@@ -49,7 +50,7 @@ public class SimpleCalculatorImpl implements ISimpleCalculator {
         return calculateSumAllTermsOnStack(termStack);
     }
 
-    private void defineOperationAndPutItsResultOnStack(Scanner scanner, Deque<Double> termStack){
+    public void defineOperationAndPutItsResultOnStack(Scanner scanner, Deque<Double> termStack){
         String currentToken = scanner.next();
 
         if (currentToken.length() > 4 && currentToken.substring(0, 4).equals("sqrt")) {
@@ -83,7 +84,7 @@ public class SimpleCalculatorImpl implements ISimpleCalculator {
         }
     }
 
-    private double calculateSumAllTermsOnStack(Deque<Double> termStack){
+    public double calculateSumAllTermsOnStack(Deque<Double> termStack){
         double resultOfExpression = 0;
         for (double currentNumber : termStack) {
             resultOfExpression = takeSum(resultOfExpression, currentNumber);
