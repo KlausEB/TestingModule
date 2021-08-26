@@ -3,17 +3,13 @@ package com.epam.testProject.calculatorClasses;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import javax.naming.OperationNotSupportedException;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.Scanner;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.junit.Assert.assertEquals;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SimpleCalculatorImplTest {
@@ -84,7 +80,7 @@ public class SimpleCalculatorImplTest {
     }
 
     @Test
-    public void calculateExpression_True_StringExpressionEqualsTwoPointFive(){
+    public void calculateExpression_True_StringExpressionEqualsTwoPointFive() {
         //GIVEN
         String expression = "2.5";
 
@@ -96,7 +92,7 @@ public class SimpleCalculatorImplTest {
     }
 
     @Test
-    public void calculateExpression_True_StringExpressionTenPlusFiveEqualsFifteen(){
+    public void calculateExpression_True_StringExpressionTenPlusFiveEqualsFifteen() {
         //GIVEN
         String expression = "10 + 5";
 
@@ -108,7 +104,7 @@ public class SimpleCalculatorImplTest {
     }
 
     @Test
-    public void calculateExpression_True_StringExpressionSixMinusTwoEqualsFour(){
+    public void calculateExpression_True_StringExpressionSixMinusTwoEqualsFour() {
         //GIVEN
         String expression = "6 - 2";
 
@@ -120,7 +116,7 @@ public class SimpleCalculatorImplTest {
     }
 
     @Test
-    public void calculateExpression_True_StringExpressionSixDivideTwoEqualsThree(){
+    public void calculateExpression_True_StringExpressionSixDivideTwoEqualsThree() {
         //GIVEN
         String expression = "6 / 2";
 
@@ -132,7 +128,7 @@ public class SimpleCalculatorImplTest {
     }
 
     @Test
-    public void calculateExpression_True_StringExpressionSixMultiplyTwoEqualsTwelve(){
+    public void calculateExpression_True_StringExpressionSixMultiplyTwoEqualsTwelve() {
         //GIVEN
         String expression = "6 * 2";
 
@@ -144,7 +140,7 @@ public class SimpleCalculatorImplTest {
     }
 
     @Test
-    public void calculateExpression_True_StringExpressionSqrtOfSixteenEqualsFour(){
+    public void calculateExpression_True_StringExpressionSqrtOfSixteenEqualsFour() {
         //GIVEN
         String expression = "sqrt16";
 
@@ -156,7 +152,7 @@ public class SimpleCalculatorImplTest {
     }
 
     @Test
-    public void calculateExpression_True_FinalStringExpressionEqualsCorrectValue(){
+    public void calculateExpression_True_FinalStringExpressionEqualsCorrectValue() {
         //GIVEN
         String expression = "2 + 3 * 45.3 * 90 + 20 - 8 / 20 - sqrt4";
 
@@ -168,7 +164,7 @@ public class SimpleCalculatorImplTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void calculateExpression_IllegalArgumentException_IncorrectOperationInStringExpression(){
+    public void calculateExpression_IllegalArgumentException_IncorrectOperationInStringExpression() {
         //GIVEN
         String expression = "2 ^ 3";
 
@@ -177,7 +173,7 @@ public class SimpleCalculatorImplTest {
     }
 
     @Test
-    public void calculateSumAllTermsOnStack_True_CorrectSumForElementsOnStack(){
+    public void calculateSumAllTermsOnStack_True_CorrectSumForElementsOnStack() {
         //GIVEN
         Deque<Double> termStack = new ArrayDeque<>();
         termStack.addFirst(1.0);
@@ -192,7 +188,7 @@ public class SimpleCalculatorImplTest {
     }
 
     @Test
-    public void defineOperationAndPutItsResultOnStack_True_CorrectWorkingWithStack(){
+    public void defineOperationAndPutItsResultOnStack_True_CorrectWorkingWithStack() {
         //GIVEN
         Deque<Double> termStack = new ArrayDeque<>();
         termStack.addFirst(2.0);

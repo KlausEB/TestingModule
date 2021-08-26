@@ -1,6 +1,7 @@
 package com.epam.testProject.calculatorClasses;
 
 import com.epam.testProject.ICanCalculateExpressions;
+import com.epam.testProject.ICanCalculateWithScannerAndStack;
 import com.epam.testProject.ISimpleCalculator;
 
 import java.util.ArrayDeque;
@@ -8,7 +9,7 @@ import java.util.Deque;
 import java.util.Locale;
 import java.util.Scanner;
 
-public class SimpleCalculatorImpl implements ISimpleCalculator, ICanCalculateExpressions {
+public class SimpleCalculatorImpl implements ISimpleCalculator, ICanCalculateExpressions, ICanCalculateWithScannerAndStack {
 
     @Override
     public double takeSum(double firstNumber, double secondNumber) {
@@ -40,8 +41,8 @@ public class SimpleCalculatorImpl implements ISimpleCalculator, ICanCalculateExp
         Deque<Double> termStack = new ArrayDeque<>();
         Scanner scanner = new Scanner(expression);
         scanner.useLocale(Locale.US);
-        while (scanner.hasNext()){
-            if (scanner.hasNextDouble()){
+        while (scanner.hasNext()) {
+            if (scanner.hasNextDouble()) {
                 termStack.addFirst(scanner.nextDouble());
             } else {
                 defineOperationAndPutItsResultOnStack(scanner, termStack);
@@ -50,17 +51,18 @@ public class SimpleCalculatorImpl implements ISimpleCalculator, ICanCalculateExp
         return calculateSumAllTermsOnStack(termStack);
     }
 
-    public void defineOperationAndPutItsResultOnStack(Scanner scanner, Deque<Double> termStack){
+    @Override
+    public void defineOperationAndPutItsResultOnStack(Scanner scanner, Deque<Double> termStack) {
         String currentToken = scanner.next();
 
-        if (currentToken.length() > 4 && currentToken.substring(0, 4).equals("sqrt")) {
+        if (currentToken.length() > 4 && currentToken.startsWith("sqrt")) {
             termStack.addFirst(takeSqrt(Double.parseDouble(currentToken.substring(4))));
             return;
         }
 
         double nextNumber;
 
-        if (scanner.hasNextDouble()){
+        if (scanner.hasNextDouble()) {
             nextNumber = scanner.nextDouble();
         } else {
             nextNumber = takeSqrt(Double.parseDouble(scanner.next().substring(4)));
@@ -84,7 +86,8 @@ public class SimpleCalculatorImpl implements ISimpleCalculator, ICanCalculateExp
         }
     }
 
-    public double calculateSumAllTermsOnStack(Deque<Double> termStack){
+    @Override
+    public double calculateSumAllTermsOnStack(Deque<Double> termStack) {
         double resultOfExpression = 0;
         for (double currentNumber : termStack) {
             resultOfExpression = takeSum(resultOfExpression, currentNumber);
