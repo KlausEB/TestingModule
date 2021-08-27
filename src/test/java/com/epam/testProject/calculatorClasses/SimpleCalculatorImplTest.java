@@ -3,6 +3,7 @@ package com.epam.testProject.calculatorClasses;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.ArrayDeque;
@@ -190,15 +191,17 @@ public class SimpleCalculatorImplTest {
     @Test
     public void defineOperationAndPutItsResultOnStack_True_CorrectWorkingWithStack() {
         //GIVEN
+        SimpleCalculatorImpl spyCalculator = Mockito.spy(SimpleCalculatorImpl.class);
         Deque<Double> termStack = new ArrayDeque<>();
         termStack.addFirst(2.0);
         Scanner scanner = new Scanner("* 3");
 
         //WHEN
-        calculator.defineOperationAndPutItsResultOnStack(scanner, termStack);
+        spyCalculator.defineOperationAndPutItsResultOnStack(scanner, termStack);
 
         //THEN
         assertEquals(6, termStack.removeFirst(), 0.0);
+        Mockito.verify(spyCalculator).takeMultiplication(2.0, 3.0);
     }
 
 }
