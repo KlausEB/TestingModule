@@ -37,10 +37,8 @@ public class SimpleCalculatorImpl implements ISimpleCalculator, ICanCalculateExp
     }
 
     @Override
-    public double calculateExpression(String expression) {
+    public double calculateExpression(ScannerDoppelganger scanner) {
         Deque<Double> termStack = new ArrayDeque<>();
-        Scanner scanner = new Scanner(expression);
-        scanner.useLocale(Locale.US);
         while (scanner.hasNext()) {
             if (scanner.hasNextDouble()) {
                 termStack.addFirst(scanner.nextDouble());
@@ -52,7 +50,7 @@ public class SimpleCalculatorImpl implements ISimpleCalculator, ICanCalculateExp
     }
 
     @Override
-    public void defineOperationAndPutItsResultOnStack(Scanner scanner, Deque<Double> termStack) {
+    public void defineOperationAndPutItsResultOnStack(ScannerDoppelganger scanner, Deque<Double> termStack) {
         String currentToken = scanner.next();
 
         if (currentToken.length() > 4 && currentToken.startsWith("sqrt")) {
@@ -89,8 +87,8 @@ public class SimpleCalculatorImpl implements ISimpleCalculator, ICanCalculateExp
     @Override
     public double calculateSumAllTermsOnStack(Deque<Double> termStack) {
         double resultOfExpression = 0;
-        for (double currentNumber : termStack) {
-            resultOfExpression = takeSum(resultOfExpression, currentNumber);
+        while (!termStack.isEmpty()){
+            resultOfExpression = takeSum(termStack.removeFirst(), resultOfExpression);
         }
         return resultOfExpression;
     }

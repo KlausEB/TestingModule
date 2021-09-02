@@ -1,5 +1,7 @@
 package com.epam.testProject;
 
+import com.epam.testProject.calculatorClasses.ScannerDoppelganger;
+
 public interface ICanCalculateExpressions {
-    double calculateExpression(String expression);
+    double calculateExpression(ScannerDoppelganger expression);
 }
