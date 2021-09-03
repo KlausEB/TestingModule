@@ -1,19 +1,17 @@
 package com.epam.testProject.calculatorClasses;
 
+import com.epam.testProject.impl.ScannerDoppelganger;
+import com.epam.testProject.impl.SimpleCalculatorImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Matchers;
-import org.mockito.Mockito;
+import org.mockito.Mock;
 import org.mockito.Spy;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.mockito.Mockito.*;
-import org.mockito.stubbing.Answer;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
-import java.util.Scanner;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
@@ -24,6 +22,12 @@ public class SimpleCalculatorImplTest {
     @InjectMocks
     @Spy
     private SimpleCalculatorImpl calculator;
+
+    @Mock
+    private Deque<Double> termStack;
+
+    @Mock
+    private ScannerDoppelganger scanner;
 
     @Test
     public void takeAddition_True_OnePlusOneEqualsTwo() {
@@ -90,30 +94,14 @@ public class SimpleCalculatorImplTest {
     @Test
     public void calculateExpression_True_StringExpressionTenPlusFiveEqualsFifteen() {
         //GIVEN
-        ScannerDoppelganger scanner = mock(ScannerDoppelganger.class);
-        doAnswer(new Answer<Boolean>() {
-            int count = 0;
-            @Override
-            public Boolean answer(InvocationOnMock invocationOnMock) throws Throwable {
-                return count++ < 2;
-            }
-        }).when(scanner).hasNext();
-        doAnswer(new Answer<Boolean>() {
-            int count = 0;
-            @Override
-            public Boolean answer(InvocationOnMock invocationOnMock) throws Throwable {
-                return count++ == 0;
-            }
-        }).when(scanner).hasNextDouble();
-        doReturn(10.0).when(scanner).nextDouble();
-        doNothing().when(calculator).defineOperationAndPutItsResultOnStack(Matchers.<ScannerDoppelganger>any(), Matchers.<Deque<Double>>any());
-        doReturn(15.0).when(calculator).calculateExpression(scanner);
+        doReturn(15.0).when(calculator).calculateSumAllTermsOnStack(Matchers.<Deque<Double>>any());
 
         //WHEN
         double resultOfExpression = calculator.calculateExpression(scanner);
 
         //THEN
         assertEquals(15, resultOfExpression, 0.0);
+        verify(scanner).hasNext();
     }
 
     @Test
@@ -129,34 +117,28 @@ public class SimpleCalculatorImplTest {
     }
 
     @Test
-    public void calculateSumAllTermsOnStack_True_CorrectSumForElementsOnStack() {
+    public void calculateSumAllTermsOnStack_True_EmptyStackSumEqualsZero() {
         //GIVEN
-        Deque<Double> termStack = mock(Deque.class);
-        doAnswer(new Answer<Double>() {
-            int count = 0;
-            @Override
-            public Double answer(InvocationOnMock invocationOnMock) throws Throwable {
-                if (count == 0){
-                    count++;
-                    return 1.0;
-                } else if (count == 1){
-                    count++;
-                    return 2.5;
-                } else {
-                    return 0.3;
-                }
-            }
-        }).when(termStack).removeFirst();
-        doAnswer(new Answer<Boolean>() {
-            int count = 0;
-            @Override
-            public Boolean answer(InvocationOnMock invocationOnMock) throws Throwable {
-                return count++ > 2;
-            }
-        }).when(termStack).isEmpty();
+        doReturn(true).when(termStack).isEmpty();
 
         //WHEN
         double sumStack = calculator.calculateSumAllTermsOnStack(termStack);
+
+        //THEN
+        assertEquals(0.0, sumStack, 0.0);
+    }
+
+    @Test
+    public void calculateSumAllTermsOnStack_True_CorrectSumForElementsOnStack() {
+        //GIVEN
+        Deque<Double> stack = new ArrayDeque<>();
+        stack.addFirst(1.7);
+        stack.addFirst(2.0);
+        stack.addFirst(0.1);
+
+
+        //WHEN
+        double sumStack = calculator.calculateSumAllTermsOnStack(stack);
 
         //THEN
         assertEquals(3.8, sumStack, 0.0);
@@ -165,8 +147,6 @@ public class SimpleCalculatorImplTest {
     @Test(expected = IllegalArgumentException.class)
     public void defineOperationAndPutItsResultOnStack_IllegalArgumentException_IncorrectOperationInStringExpression() {
         //GIVEN
-        ScannerDoppelganger scanner = mock(ScannerDoppelganger.class);
-        Deque<Double> termStack = mock(Deque.class);
         doReturn("^").when(scanner).next();
         doReturn(true).when(scanner).hasNextDouble();
         doReturn(3.0).when(scanner).nextDouble();
@@ -178,32 +158,19 @@ public class SimpleCalculatorImplTest {
     @Test
     public void defineOperationAndPutItsResultOnStack_True_CorrectWorkingWithStack() {
         //GIVEN
-        SimpleCalculatorImpl spyCalculator = spy(SimpleCalculatorImpl.class);
-        Deque<Double> termStack = mock(Deque.class);
-        ScannerDoppelganger scanner = mock(ScannerDoppelganger.class);
-        doReturn(6.0).when(spyCalculator).takeMultiplication(2.0, 3.0);
-        doNothing().when(termStack).addFirst(6.0);
-        doReturn("*").when(scanner).next();
         doReturn(true).when(scanner).hasNextDouble();
-        doReturn(3.0).when(scanner).nextDouble();
-        doAnswer(new Answer<Double>() {
-            int count = 0;
-            @Override
-            public Double answer(InvocationOnMock invocationOnMock) throws Throwable {
-                if(count++ == 0){
-                    return 2.0;
-                } else {
-                    return 6.0;
-                }
-            }
-        }).when(termStack).removeFirst();
+        doReturn("*").when(scanner).next();
+        double firstNumber = 2.0;
+        double secondNumber = 3.0;
+        doReturn(firstNumber).when(termStack).removeFirst();
+        doReturn(secondNumber).when(scanner).nextDouble();
+        doNothing().when(termStack).addFirst(anyDouble());
 
         //WHEN
-        spyCalculator.defineOperationAndPutItsResultOnStack(scanner, termStack);
+        calculator.defineOperationAndPutItsResultOnStack(scanner, termStack);
 
         //THEN
-        assertEquals(6.0, termStack.removeFirst(), 0.0);
-        verify(spyCalculator).takeMultiplication(2.0, 3.0);
+        verify(calculator).takeMultiplication(firstNumber, secondNumber);
     }
 
 }

@@ -1,9 +1,8 @@
 package com.epam.testProject;
 
-import com.epam.testProject.calculatorClasses.ScannerDoppelganger;
+import com.epam.testProject.impl.ScannerDoppelganger;
 
 import java.util.Deque;
-import java.util.Scanner;
 
 public interface ICanCalculateWithScannerAndStack {
     void defineOperationAndPutItsResultOnStack(ScannerDoppelganger scanner, Deque<Double> stack);

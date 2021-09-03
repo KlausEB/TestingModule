@@ -1,4 +1,4 @@
-package com.epam.testProject.calculatorClasses;
+package com.epam.testProject.impl;
 
 import com.epam.testProject.ICanCalculateExpressions;
 import com.epam.testProject.ICanCalculateWithScannerAndStack;
@@ -6,8 +6,6 @@ import com.epam.testProject.ISimpleCalculator;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
-import java.util.Locale;
-import java.util.Scanner;
 
 public class SimpleCalculatorImpl implements ISimpleCalculator, ICanCalculateExpressions, ICanCalculateWithScannerAndStack {
 
@@ -40,17 +38,17 @@ public class SimpleCalculatorImpl implements ISimpleCalculator, ICanCalculateExp
     public double calculateExpression(ScannerDoppelganger scanner) {
         Deque<Double> termStack = new ArrayDeque<>();
         while (scanner.hasNext()) {
-            if (scanner.hasNextDouble()) {
-                termStack.addFirst(scanner.nextDouble());
-            } else {
-                defineOperationAndPutItsResultOnStack(scanner, termStack);
-            }
+            defineOperationAndPutItsResultOnStack(scanner, termStack);
         }
         return calculateSumAllTermsOnStack(termStack);
     }
 
     @Override
     public void defineOperationAndPutItsResultOnStack(ScannerDoppelganger scanner, Deque<Double> termStack) {
+        if (scanner.hasNextDouble()) {
+            termStack.addFirst(scanner.nextDouble());
+        }
+
         String currentToken = scanner.next();
 
         if (currentToken.length() > 4 && currentToken.startsWith("sqrt")) {
@@ -87,7 +85,7 @@ public class SimpleCalculatorImpl implements ISimpleCalculator, ICanCalculateExp
     @Override
     public double calculateSumAllTermsOnStack(Deque<Double> termStack) {
         double resultOfExpression = 0;
-        while (!termStack.isEmpty()){
+        while (!termStack.isEmpty()) {
             resultOfExpression = takeSum(termStack.removeFirst(), resultOfExpression);
         }
         return resultOfExpression;

@@ -1,4 +1,4 @@
-package com.epam.testProject.calculatorClasses;
+package com.epam.testProject.impl;
 
 import java.util.Locale;
 import java.util.Scanner;
@@ -11,19 +11,19 @@ public class ScannerDoppelganger {
         scanner.useLocale(Locale.US);
     }
 
-    public boolean hasNext(){
+    public boolean hasNext() {
         return scanner.hasNext();
     }
 
-    public boolean hasNextDouble(){
+    public boolean hasNextDouble() {
         return scanner.hasNextDouble();
     }
 
-    public double nextDouble(){
+    public double nextDouble() {
         return scanner.nextDouble();
     }
 
-    public String next(){
+    public String next() {
         return scanner.next();
     }
 }

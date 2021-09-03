@@ -1,9 +1,7 @@
 package com.epam.testProject;
 
-import com.epam.testProject.calculatorClasses.ScannerDoppelganger;
-import com.epam.testProject.calculatorClasses.SimpleCalculatorImpl;
-
-import java.util.Scanner;
+import com.epam.testProject.impl.ScannerDoppelganger;
+import com.epam.testProject.impl.SimpleCalculatorImpl;
 
 public class App {
     public static void main(String[] args) {
